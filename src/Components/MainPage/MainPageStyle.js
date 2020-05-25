@@ -31,6 +31,7 @@ export const CoinBlock = styled.div`
       width: 9px;
       margin-left: 3px;
       transform: rotate(-90deg);
+      padding: 0;
     }
   }
   img {

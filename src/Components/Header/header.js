@@ -56,6 +56,7 @@ const HeaderBlock = styled.div`
 const Header = (props) => {
   const [isLoggedOut, setIsLoggedOut] = useState(false);
   const get = localStorage.getItem("access_token");
+  const role =  window.localStorage.getItem('role');
   useEffect(() => {
     if (localStorage.getItem("access_token")) setIsLoggedOut(true);
   }, []);
@@ -73,7 +74,7 @@ const Header = (props) => {
         <li className={"admin"}>
           <Link
             to={{
-              pathname: get ? "/adminPanel" : "/login",
+              pathname: get ? role==='Admin'?"/adminPanel":"/profile": "/login",
             }}
           >
             {get ? localStorage.getItem("login") : "Log In"}

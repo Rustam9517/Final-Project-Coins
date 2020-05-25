@@ -11,6 +11,7 @@ const initialState = {
     isLoggedIn:false
 };
 export default function LoginReducer(state = initialState, action) {
+    console.log(action.payload);
     switch(action.type) {
         case FETCH_LOGIN_BEGIN:
             return {

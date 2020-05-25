@@ -1,112 +1,99 @@
 import React from "react";
 import { CoinPageMain, ImageBlock, InformationBlock } from "./CoinPageStyle";
 import { Link } from "react-router-dom";
+import {fetchProductsSuccess} from "../../redux/coinAction";
 
 class CoinPage extends React.Component {
   state = {
-    id: null,
-    name: null,
-    imgFront: null,
-    imgBack: null,
-    country: null,
-    composition: null,
-    quality: null,
-    denomination: null,
-    date: null,
-    weight: null,
-    information: null,
-    price: null,
     type: null,
+    data:null,
   };
   componentDidMount() {
-    const {
-      id,
-      name,
-      imgFront,
-      imgBack,
-      country,
-      composition,
-      quality,
-      denomination,
-      date,
-      weight,
-      information,
-      price,
-      type,
-    } = this.props.location.state;
-    this.setState({
-      id: id,
-      name: name,
-      imgFront: imgFront,
-      imgBack: imgBack,
-      country: country,
-      composition: composition,
-      quality: quality,
-      denomination: denomination,
-      date: date,
-      weight: weight,
-      information: information,
-      price: price,
-      type: type,
-    });
+    const urlId = window.location.search;
+    fetch(`http://localhost:3001/coinPage${urlId}`)
+        .then((res) => res.json())
+        .then((json) => {
+          this.setState({data:json})
+        })
+    if (this.props.location.state) {
+      const username = window.localStorage.getItem("login");
+      const role = window.localStorage.getItem("role");
+      if(role!=='Admin') {
+        fetch(`http://localhost:3001/history${urlId}`, {
+          method: "POST",
+          body: JSON.stringify({
+            username: username,
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          },
+        });
+      }
+    }
   }
-
   render() {
+    const CoinBlockMain =this.state.data? this.state.data.map(el=>{
+     return[
+       <CoinPageMain key={el.id}>
+         <div>
+           <ImageBlock>
+             <img src={el.imgFrontUrl} alt="FrontSide" />
+           </ImageBlock>
+           <ImageBlock>
+             <img src={el.imgBackUrl} alt="BackSide" />
+           </ImageBlock>
+         </div>
+         <InformationBlock>
+           <h2>{el.name}</h2>
+           <p>{el.information}</p>
+           <table>
+             <tbody>
+             <tr>
+               <th>Issuing Country</th>
+               <td>{el.country}</td>
+             </tr>
+             <tr>
+               <th>Composition</th>
+               <td>{el.composition}</td>
+             </tr>
+             <tr>
+               <th>Quality</th>
+               <td>{el.quality}</td>
+             </tr>
+             <tr>
+               <th>Denomination</th>
+               <td>{el.denomination}</td>
+             </tr>
+             <tr>
+               <th>Year</th>
+               <td>{el.date}</td>
+             </tr>
+             <tr>
+               <th>Weight</th>
+               <td>{el.weight}</td>
+             </tr>
+             <tr>
+               <th>Price</th>
+               <td>{el.price}$</td>
+             </tr>
+             </tbody>
+           </table>
+           <Link
+               to={{
+                 pathname:this.props.location.state?this.props.location.state.history?'/profile':this.props.location.state.searched?'/coinListSearch':"/coinByType/"+el.type.toLowerCase():"/coinByType/"+el.type.toLowerCase(),
+                 state: {
+                   type: this.state.type,
+                 },
+               }}
+           >
+             Back to the list
+           </Link>
+         </InformationBlock>
+       </CoinPageMain>
+     ]
+  }):null;
     return (
-      <CoinPageMain>
-        <div>
-          <ImageBlock>
-            <img src={this.state.imgFront} alt="FrontSide" />
-          </ImageBlock>
-          <ImageBlock>
-            <img src={this.state.imgBack} alt="BackSide" />
-          </ImageBlock>
-        </div>
-        <InformationBlock>
-          <h2>{this.state.name}</h2>
-          <p>{this.state.information}</p>
-          <table>
-            <tbody>
-              <tr>
-                <th>Issuing Country</th>
-                <td>{this.state.country}</td>
-              </tr>
-              <tr>
-                <th>Composition</th>
-                <td>{this.state.composition}</td>
-              </tr>
-              <tr>
-                <th>Quality</th>
-                <td>{this.state.quality}</td>
-              </tr>
-              <tr>
-                <th>Denomination</th>
-                <td>{this.state.denomination}</td>
-              </tr>
-              <tr>
-                <th>Year</th>
-                <td>{this.state.date}</td>
-              </tr>
-              <tr>
-                <th>Weight</th>
-                <td>{this.state.weight}</td>
-              </tr>
-              <tr>
-                <th>Price</th>
-                <td>{this.state.price}$</td>
-              </tr>
-            </tbody>
-          </table>
-          <Link
-              to={{
-                pathname: "/coinList",
-                state: {
-                  type:this.state.type
-                },
-              }}
-          >Back to the list</Link>
-        </InformationBlock>
-      </CoinPageMain>
+        [CoinBlockMain]
     );
   }
 }

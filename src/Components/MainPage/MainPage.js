@@ -12,7 +12,7 @@ const MainPage = () => {
           <h3>Bullion coins</h3>
           <Link
             to={{
-              pathname: "/coinList",
+                pathname: "/coinByType/investment",
               state: {
                 type: "Investment",
               },
@@ -33,7 +33,7 @@ const MainPage = () => {
           <h3>Exclusive coins</h3>
           <Link
             to={{
-              pathname: "/coinList",
+              pathname: "/coinByType/exclusive",
               state: {
                 type: "Exclusive",
               },
@@ -54,7 +54,7 @@ const MainPage = () => {
           <h3>Commemorative coins</h3>
           <Link
             to={{
-              pathname: "/coinList",
+              pathname: "/coinByType/memorable",
               state: {
                 type: "Memorable",
               },

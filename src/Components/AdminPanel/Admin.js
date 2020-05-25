@@ -12,6 +12,7 @@ import {
 import { connect } from "react-redux";
 import { Search } from "../SearchBar/SearchBarStyles";
 import { Link } from "react-router-dom";
+import UserProfile from "../UserProfile/UserProfile";
 import { fetchFilterCoins, fetchProducts } from "../../redux/actions";
 
 const AdminPanel = (props) => {
@@ -93,7 +94,6 @@ const AdminPanel = (props) => {
     : null;
   return (
     <AdminMain>
-      {tokenCheck ? (
         <AdminBlock>
           <h2>Admin panel</h2>
           <Search>
@@ -115,9 +115,6 @@ const AdminPanel = (props) => {
             <CoinContent>{CoinsBlock}</CoinContent>
           </CoinsListMain>
         </AdminBlock>
-      ) : (
-        <p>У вас нет Доступа</p>
-      )}
     </AdminMain>
   );
 };

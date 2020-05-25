@@ -29,7 +29,9 @@ const SearchBar = (props) => {
           onClick={handlerSearch}
           to={{
             pathname: "/coinListSearch",
-            type: null,
+            state:{
+              searchHistory:true
+            }
           }}
         >
           Search

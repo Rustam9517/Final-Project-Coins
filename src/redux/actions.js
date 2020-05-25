@@ -14,6 +14,7 @@ export function fetchProducts(type) {
   return (dispatch) => {
     dispatch(fetchProductsBegin());
     if (type) {
+        console.log('hi');
       return fetch(`http://localhost:3001/coinByType?type=${type}`)
         .then(handleErrors)
         .then((res) => res.json())
@@ -37,7 +38,7 @@ export function fetchProducts(type) {
 export function loginFetch(login, pass) {
   return (dispatch) => {
     dispatch(fetchLoginBegin());
-    return fetch(`http://localhost:3001/login`, {
+     const logInfo = fetch(`http://localhost:3001/login`, {
       method: "POST",
       body: JSON.stringify({
         login: login,
@@ -46,13 +47,17 @@ export function loginFetch(login, pass) {
       headers: { "Content-type": "application/json; charset=utf-8" },
     })
       .then(handleErrors)
-      .then((res) => res.json())
+      .then((res) => {
+          return res.json();
+      })
       .then((json) => {
         window.localStorage.setItem("access_token", json.newToken);
         window.localStorage.setItem("login", json.login);
+          window.localStorage.setItem("role", json.role);
         dispatch(fetchLoginSuccess(json));
       })
       .catch((error) => dispatch(fetchLoginFailure(error)));
+     return logInfo;
   };
 }
 

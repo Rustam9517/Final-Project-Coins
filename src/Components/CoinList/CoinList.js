@@ -14,10 +14,17 @@ import SearchBar from "../SearchBar/SearchBar";
 const CoinsList = (props) => {
   const [byType, setByType] = useState(null);
   useEffect(() => {
-    if (props.location.state) {
-      const type = props.location.state.type;
-      props.dispatch(fetchProducts(type));
-      setByType(type);
+    if(window.location.pathname==='/coinByType/investment') {
+      props.dispatch(fetchProducts('Investment'));
+      setByType('Investment');
+    }else
+    if(window.location.pathname==='/coinByType/exclusive') {
+      props.dispatch(fetchProducts('Exclusive'));
+      setByType('Exclusive');
+    }else
+    if(window.location.pathname==='/coinByType/memorable') {
+      props.dispatch(fetchProducts('Memorable'));
+      setByType('Memorable');
     }
   }, []);
   const shortinfo = (value) => {
@@ -31,7 +38,6 @@ const CoinsList = (props) => {
     }
     return newText;
   };
-
   const { coins, search } = props;
   const typedEl =
     byType && coins ? coins.filter((el) => el.type === byType) : null;
@@ -52,22 +58,10 @@ const CoinsList = (props) => {
           <Link
             key={el.id}
             to={{
-              pathname: "/coinPage",
-              state: {
-                id: el.id,
-                name: el.name,
-                imgFront: el.imgFrontUrl,
-                imgBack: el.imgBackUrl,
-                country: el.country,
-                composition: el.composition,
-                quality: el.quality,
-                denomination: el.denomination,
-                date: el.date,
-                weight: el.weight,
-                price: el.price,
-                information: el.information,
-                type: byType,
-              },
+              pathname: props.location.state?props.location.state.searchHistory?'coinPageSearch/?id='+el.id:"/coinPage/?id="+el.id:"/coinPage/?id="+el.id,
+              state:{
+                searched:props.location.state.searchHistory
+              }
             }}
           >
             <CoinSelf>
